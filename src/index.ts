@@ -21,6 +21,7 @@ import { PostResolver } from "./resolvers/post"
 import cors from "cors"
 import { Context } from "./types/Context"
 import { buildDataLoaders } from "./utils/dataLoaders"
+import path from "path"
 
 const main = async () => {
 
@@ -46,7 +47,8 @@ const main = async () => {
             : {}),
         ...(__prod__ ? {} : { synchronize: true }),
         synchronize: false,
-        entities: [User, Post, Upvote]
+        entities: [User, Post, Upvote],
+		migrations: [path.join(__dirname, '/migrations/*')]
     })
 
     if (__prod__) await connection.runMigrations()
