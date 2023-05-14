@@ -167,7 +167,7 @@ export class UserResolver {
         return new Promise((resolve, _reject) => {
             res.clearCookie(COOKIE_NAME);
 
-            req.session.destroy((error) => {
+            req.session.destroy((error: Error | null) => {
                 if (error) {
                     console.log("DESTROYING SESSION ERROR", error);
                     resolve(false);
