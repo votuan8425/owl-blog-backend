@@ -30,8 +30,15 @@ const contanst_1 = require("./contanst");
 const post_1 = require("./resolvers/post");
 const cors_1 = __importDefault(require("cors"));
 const dataLoaders_1 = require("./utils/dataLoaders");
+const path_1 = __importDefault(require("path"));
 const main = () => __awaiter(void 0, void 0, void 0, function* () {
-    const connection = yield (0, typeorm_1.createConnection)(Object.assign(Object.assign(Object.assign({ type: "postgres", database: contanst_1.__prod__ ? process.env.POSTGRES_DB : "Reddit", username: process.env.DB_USERNAME, password: process.env.DB_PASSWORD, logging: true }, (contanst_1.__prod__
+    const connection = yield (0, typeorm_1.createConnection)(Object.assign(Object.assign(Object.assign(Object.assign(Object.assign({ type: "postgres" }, (contanst_1.__prod__
+        ? { url: process.env.DATABASE_URL }
+        : {
+            database: 'Reddit',
+            username: process.env.DB_USERNAME,
+            password: process.env.DB_PASSWORD
+        })), { logging: true }), (contanst_1.__prod__
         ? {
             extra: {
                 ssl: {
@@ -40,7 +47,7 @@ const main = () => __awaiter(void 0, void 0, void 0, function* () {
             },
             ssl: true
         }
-        : {})), (contanst_1.__prod__ ? {} : { synchronize: true })), { synchronize: false, entities: [User_1.User, Post_1.Post, Upvote_1.Upvote] }));
+        : {})), (contanst_1.__prod__ ? {} : { synchronize: true })), { synchronize: false, entities: [User_1.User, Post_1.Post, Upvote_1.Upvote], migrations: [path_1.default.join(__dirname, '/migrations/*')] }));
     if (contanst_1.__prod__)
         yield connection.runMigrations();
     const app = (0, express_1.default)();
@@ -60,7 +67,7 @@ const main = () => __awaiter(void 0, void 0, void 0, function* () {
             maxAge: 1000 * 60 * 60,
             httpOnly: true,
             secure: contanst_1.__prod__ ? true : false,
-            sameSite: contanst_1.__prod__ ? 'none' : 'lax'
+            sameSite: 'none'
         },
         secret: process.env.SESSION_SECRET_DEV_PROD,
         saveUninitialized: false,
