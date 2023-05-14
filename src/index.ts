@@ -67,9 +67,15 @@ const main = async () => {
     const mongoUrl = `mongodb+srv://${process.env.SESSION_DB_USERNAME_DEV_PROD}:${process.env.SESSION_DB_PASSWORD_DEV_PROD}@reddit-fullstack.dtw9y9h.mongodb.net/?retryWrites=true&w=majority`
 
     await mongoose.connect(mongoUrl, {
-    })
+        useNewUrlParser: true,
+        useUnifiedTopology: true,
+        useCreateIndex: true,
+        useFindAndModify: false,
+      });
 
     console.log('🚀 MongoDB Connected')
+
+    app.set('trust proxy', 1)
 
     app.use(
         session({
@@ -79,13 +85,14 @@ const main = async () => {
                 maxAge: 1000 * 60 * 60, // one hour
                 httpOnly: true, // JS front end cannot access the cookie
                 secure: __prod__ ? true : false, // cookie only works in https
-                sameSite: 'none' 
+                sameSite: __prod__ ? 'none' : 'lax'
             },
             secret: process.env.SESSION_SECRET_DEV_PROD as string,
             saveUninitialized: false, // don't save empty sessions, right from the start
             resave: false
         })
     )
+
 
 
     const PORT = process.env.PORT || 4000
@@ -105,6 +112,7 @@ const main = async () => {
     });
 
     await apolloServer.start()
+
     const handler = apolloServer.createHandler({ path: '/api/graphql' });
 
     app.use(handler);
