@@ -66,10 +66,11 @@ const main = async () => {
 
     const mongoUrl = `mongodb+srv://${process.env.SESSION_DB_USERNAME_DEV_PROD}:${process.env.SESSION_DB_PASSWORD_DEV_PROD}@reddit-fullstack.dtw9y9h.mongodb.net/?retryWrites=true&w=majority`
 
-    await mongoose.connect(mongoUrl, {
-    })
+    await mongoose.connect(mongoUrl);
 
     console.log('🚀 MongoDB Connected')
+
+    app.set('trust proxy', 1)
 
     app.use(
         session({
@@ -86,6 +87,7 @@ const main = async () => {
             resave: false
         })
     )
+
 
 
     const PORT = process.env.PORT || 4000
@@ -105,6 +107,7 @@ const main = async () => {
     });
 
     await apolloServer.start()
+
     const handler = apolloServer.createHandler({ path: '/api/graphql' });
 
     app.use(handler);
