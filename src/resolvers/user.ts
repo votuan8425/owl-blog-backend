@@ -80,6 +80,8 @@ export class UserResolver {
 
             req.session.userId = newUser.id;
 
+            console.log("cookie: ", req.session)
+
             return {
                 code: 200,
                 success: true,
@@ -142,6 +144,7 @@ export class UserResolver {
 
             // Create session and return cookie
             req.session.userId = existingUser.id;
+            console.log("cookie", req.session)
 
             return {
                 code: 200,

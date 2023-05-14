@@ -81,6 +81,7 @@ let UserResolver = class UserResolver {
                     email,
                 });
                 req.session.userId = newUser.id;
+                console.log("cookie: ", req.session);
                 return {
                     code: 200,
                     success: true,
@@ -130,6 +131,7 @@ let UserResolver = class UserResolver {
                         errors: [{ field: "password", message: "Wrong password" }],
                     };
                 req.session.userId = existingUser.id;
+                console.log("cookie", req.session);
                 return {
                     code: 200,
                     success: true,
