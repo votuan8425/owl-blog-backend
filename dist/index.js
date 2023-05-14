@@ -58,8 +58,9 @@ const main = () => __awaiter(void 0, void 0, void 0, function* () {
         credentials: true
     }));
     const mongoUrl = `mongodb+srv://${process.env.SESSION_DB_USERNAME_DEV_PROD}:${process.env.SESSION_DB_PASSWORD_DEV_PROD}@reddit-fullstack.dtw9y9h.mongodb.net/?retryWrites=true&w=majority`;
-    yield mongoose_1.default.connect(mongoUrl, {});
+    yield mongoose_1.default.connect(mongoUrl);
     console.log('🚀 MongoDB Connected');
+    app.set('trust proxy', 1);
     app.use((0, express_session_1.default)({
         name: contanst_1.COOKIE_NAME,
         store: connect_mongo_1.default.create({ mongoUrl }),
